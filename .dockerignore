@@ -1,0 +1,8 @@
+.git
+pebble.exe
+pebble
+.idea
+.vscode/
+dist/
+builds/
+vendor/
