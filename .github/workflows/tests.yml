@@ -18,10 +18,10 @@ jobs:
           echo "127.0.0.1 elpmaxe.letsencrypt.org" | sudo tee -a /etc/hosts
       # https://github.com/marketplace/actions/checkout
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       # https://github.com/marketplace/actions/setup-go-environment
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
       - name: Install packages
@@ -42,9 +42,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
       - name: go install commands
@@ -63,12 +63,12 @@ jobs:
     name: Test lego with EAB
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v6
         with:
-          go-version-file: go.mod
+          go-version: stable
       - name: Install lego cli
-        run: go install github.com/go-acme/lego/v4/cmd/lego@latest
+        run: go install github.com/go-acme/lego/v5@latest
       - name: go install commands
         run: go install -v ./cmd/...
       - name: launch pebble
@@ -77,21 +77,20 @@ jobs:
           pebble -config test/config/pebble-config-external-account-bindings.json &
       - run: |
           LEGO_CA_CERTIFICATES=./test/certs/pebble.minica.pem \
-          lego --accept-tos \
+          lego run \
+               --accept-tos \
                --server=https://localhost:14000/dir \
-               --email="pebble-test@example.letsencrypt.org" \
                --domains=example.letsencrypt.org \
                --eab \
-                 --kid kid-3 \
-                 --hmac=HjudV5qnbreN-n9WyFSH-t4HXuEx_XFen45zuxY-G1h6fr74V3cUM_dVlwQZBWmc \
-               --http --http.port=:5002 \
-               run
+                 --eab.kid kid-3 \
+                 --eab.hmac=HjudV5qnbreN-n9WyFSH-t4HXuEx_XFen45zuxY-G1h6fr74V3cUM_dVlwQZBWmc \
+               --http --http.address=:5002
   go-linux:
     name: Run Go tests on Linux
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       # Run project unit tests (with the race detector enabled and atomic coverage profile collection)
       - name: unittests
         run: go test -v -race -covermode=atomic -coverprofile=profile.cov ./...

@@ -11,13 +11,12 @@ permissions:
   pull-requests: read
 env:
   CGO_ENABLED: 0
-  GOLANGCI_LINT_VERSION: v2.9.0
-  SHELLCHECK_SCRIPTS: ./*.sh
+  GOLANGCI_LINT_VERSION: v2.12
 jobs:
   go-lint-checks:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
@@ -28,15 +27,12 @@ jobs:
   go-mod-checks:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-go@v6
         with:
           go-version-file: go.mod
       - name: Check if go.mod is tidy
-        run: |
-          go mod tidy
-          git diff --exit-code go.mod go.sum ||
-            (echo "::error::go.mod and go.sum need to be tidy" && exit 1)
+        run: go mod tidy --diff
       - name: Check if vendor directory is up to date
         run: |
           go mod vendor

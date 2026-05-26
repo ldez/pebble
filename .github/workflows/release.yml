@@ -32,7 +32,7 @@ jobs:
           - linux
           - windows
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: actions/setup-go@v6
         with:
           check-latest: true
@@ -48,7 +48,7 @@ jobs:
       - name: Display ${{ matrix.app }} artifacts
         run: tree /tmp/dist
       - name: Store ${{ matrix.app }} artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.app }}-${{ matrix.go-os }}-${{ matrix.go-arch }}
           path: /tmp/dist
@@ -64,9 +64,9 @@ jobs:
         - app: pebble-challtestsrv
           expose_ports: "5001 5002 5003 8053 8055 8443"
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - name: Download ${{ matrix.app }} artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           merge-multiple: true
           path: /tmp/dist
@@ -75,7 +75,7 @@ jobs:
         run: tree /tmp/dist
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: ${{ env.DOCKER_IMAGE_BASENAME }}/${{ matrix.app }}
           # generate Docker tags based on the following events/attributes
@@ -86,9 +86,9 @@ jobs:
             type=sha
             type=raw,value=latest
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
       - name: Login to GitHub Container Registry
         run: printenv GITHUB_TOKEN | docker login -u "$GITHUB_ACTOR" --password-stdin ghcr.io
         env:
@@ -131,7 +131,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download build artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
       - name: Display build artifacts
         run: tree .
       - name: Create release
