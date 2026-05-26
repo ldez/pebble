@@ -19,6 +19,8 @@ jobs:
       # https://github.com/marketplace/actions/checkout
       - name: Check out code
         uses: actions/checkout@v6
+        with:
+          persist-credentials: false
       # https://github.com/marketplace/actions/setup-go-environment
       - name: Set up Go
         uses: actions/setup-go@v6
@@ -43,6 +45,8 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v6
+        with:
+          persist-credentials: false
       - name: Set up Go
         uses: actions/setup-go@v6
         with:
@@ -64,6 +68,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
       - uses: actions/setup-go@v6
         with:
           go-version: stable
@@ -91,6 +97,8 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v6
+        with:
+          persist-credentials: false
       # Run project unit tests (with the race detector enabled and atomic coverage profile collection)
       - name: unittests
         run: go test -v -race -covermode=atomic -coverprofile=profile.cov ./...

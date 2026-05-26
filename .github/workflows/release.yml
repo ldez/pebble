@@ -33,10 +33,13 @@ jobs:
           - windows
     steps:
       - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
       - uses: actions/setup-go@v6
         with:
           check-latest: true
           go-version-file: go.mod
+          cache: false
       - name: Build ${{ matrix.app }} for ${{ matrix.go-os }}/${{ matrix.go-arch }}
         run: |
           go build \
@@ -65,6 +68,8 @@ jobs:
           expose_ports: "5001 5002 5003 8053 8055 8443"
     steps:
       - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
       - name: Download ${{ matrix.app }} artifacts
         uses: actions/download-artifact@v8
         with:
@@ -147,6 +152,6 @@ jobs:
           for artifact in *; do
             tar czf ${artifact}.tar.gz ${artifact}
             zip -r ${artifact}.zip ${artifact}
-            gh release upload ${{ github.ref_name }} ${artifact}.* \
+            gh release upload ${GITHUB_REF_NAME} ${artifact}.* \
               --repo ${{ github.repository }};
           done
